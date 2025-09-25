@@ -11,6 +11,7 @@ import Signup from "./pages/Auth/Signup";
 import Login from "./pages/Auth/Login";
 import DoctorForgotPassword from "./pages/Doctor/DoctorForgotPassword";
 import PharmacistForgotPassword from "./pages/Pharmacist/PharmacistForgotPassword";
+import PatientForgotPassword from "./pages/Patient/PatientForgotPassword"; // ✅ new import
 
 // Theme
 import { ThemeProvider } from "./context/ThemeContext";
@@ -21,7 +22,7 @@ function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" }); 
+    window.scrollTo({ top: 0, behavior: "instant" });
     // use "smooth" instead of "instant" if you want smooth scroll
   }, [pathname]);
 
@@ -34,7 +35,8 @@ function Layout({ children }) {
   // Hide Navbar/Footer ONLY on Forgot Password pages
   const hideOnForgot = [
     "/doctor-forgot-password",
-    "/pharmacist-forgot-password"
+    "/pharmacist-forgot-password",
+    "/patient-forgot-password" // ✅ added patient route
   ];
 
   const hideLayout = hideOnForgot.includes(location.pathname);
@@ -71,6 +73,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
             <Route path="/pharmacist-forgot-password" element={<PharmacistForgotPassword />} />
+            <Route path="/patient-forgot-password" element={<PatientForgotPassword />} /> {/* ✅ new route */}
           </Routes>
         </Layout>
       </Router>

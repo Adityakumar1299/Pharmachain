@@ -7,11 +7,13 @@ import loginImage from "../assets/login.png";
 import signupImage from "../assets/signup.png";
 import doctorLoginImg from "../assets/doctor-login.png";
 import pharmacistLoginImg from "../assets/pharmacist-login.png";
+import patientLoginImg from "../assets/patient-login.png"; // ✅ Add patient image
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalStep, setModalStep] = useState("main"); // main | login | signup
+  const [modalStep, setModalStep] = useState("roles"); // roles | options
+  const [selectedRole, setSelectedRole] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow =
@@ -21,7 +23,27 @@ function Navbar() {
   const closeAllMenus = () => {
     setIsMobileMenuOpen(false);
     setShowModal(false);
-    setModalStep("main");
+    setModalStep("roles");
+    setSelectedRole(null);
+  };
+
+  // Role → text + icons
+  const roleInfo = {
+    doctor: {
+      label: "Doctor",
+      icon: "👨‍⚕️",
+      img: doctorLoginImg,
+    },
+    pharmacist: {
+      label: "Pharmacist",
+      icon: "💊",
+      img: pharmacistLoginImg,
+    },
+    patient: {
+      label: "Patient",
+      icon: "🧑‍🦰",
+      img: patientLoginImg,
+    },
   };
 
   return (
@@ -89,9 +111,12 @@ function Navbar() {
             Features
           </Link>
           <hr />
-          <Link to="/login" onClick={closeAllMenus}>Login</Link>
-          <Link to="/signup" onClick={closeAllMenus}>Register</Link>
-        
+          <Link to="/login" onClick={closeAllMenus}>
+            Login
+          </Link>
+          <Link to="/signup" onClick={closeAllMenus}>
+            Register
+          </Link>
         </div>
       </div>
 
@@ -103,115 +128,81 @@ function Navbar() {
               ×
             </button>
 
+            {/* Header */}
             <div className="modal-header">
-              {modalStep === "main" && (
+              {modalStep === "roles" && (
                 <>
-                  <h2>Welcome to Pharma Project</h2>
-                  <p>Please select an option to continue.</p>
+                  <h2>Select Your Role</h2>
+                  <p>Choose your role to continue</p>
                 </>
               )}
-              {modalStep === "login" && (
+              {modalStep === "options" && selectedRole && (
                 <>
-                  <h2>Login Options</h2>
-                  <p>Select your role to continue login.</p>
-                </>
-              )}
-              {modalStep === "signup" && (
-                <>
-                  <h2>Signup Options</h2>
-                  <p>Select your role to create account.</p>
+                  <h2>{roleInfo[selectedRole].icon} {roleInfo[selectedRole].label}</h2>
+                  <p>Choose an option to continue</p>
                 </>
               )}
             </div>
 
-            {/* Step 1: Main */}
-            {modalStep === "main" && (
+            {/* Step 1: Choose Role */}
+            {modalStep === "roles" && (
               <div className="modal-options">
-                <div
+                {Object.keys(roleInfo).map((role) => (
+                  <div
+                    key={role}
+                    className="option-card"
+                    onClick={() => {
+                      setSelectedRole(role);
+                      setModalStep("options");
+                    }}
+                  >
+                    <img src={roleInfo[role].img} alt={`${role} option`} />
+                    <div className="option-text">
+                      <h3>{roleInfo[role].icon} {roleInfo[role].label}</h3>
+                      <p>Continue as {roleInfo[role].label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Step 2: Login/Register for Selected Role */}
+            {modalStep === "options" && selectedRole && (
+              <div className="modal-options">
+                <Link
+                  to={`/login?role=${selectedRole}`}
+                  onClick={closeAllMenus}
                   className="option-card"
-                  onClick={() => setModalStep("login")}
                 >
                   <img src={loginImage} alt="Login" />
                   <div className="option-text">
-                    <h3>Login</h3>
-                    <p>Access your existing account</p>
+                    <h3>🔑 Login</h3>
+                    <p>Access your account</p>
                   </div>
-                </div>
-                <div
+                </Link>
+                <Link
+                  to={`/signup?role=${selectedRole}`}
+                  onClick={closeAllMenus}
                   className="option-card"
-                  onClick={() => setModalStep("signup")}
                 >
                   <img src={signupImage} alt="Signup" />
                   <div className="option-text">
-                    <h3>Register</h3>
-                    <p>Create a new professional account</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Login */}
-            {modalStep === "login" && (
-              <div className="modal-options">
-                <Link
-                  to="/login?role=doctor"
-                  onClick={closeAllMenus}
-                  className="option-card"
-                >
-                  <img src={doctorLoginImg} alt="Doctor Login" />
-                  <div className="option-text">
-                    <h3>👨‍⚕️ Doctor Login</h3>
-                    <p>Access doctor dashboard</p>
-                  </div>
-                </Link>
-                <Link
-                  to="/login?role=pharmacist"
-                  onClick={closeAllMenus}
-                  className="option-card"
-                >
-                  <img src={pharmacistLoginImg} alt="Pharmacist Login" />
-                  <div className="option-text">
-                    <h3>💊 Pharmacist Login</h3>
-                    <p>Access pharmacy dashboard</p>
-                  </div>
-                </Link>
-              </div>
-            )}
-
-            {/* Step 3: Signup */}
-            {modalStep === "signup" && (
-              <div className="modal-options">
-                <Link
-                  to="/signup?role=doctor"
-                  onClick={closeAllMenus}
-                  className="option-card"
-                >
-                  <img src={doctorLoginImg} alt="Doctor Signup" />
-                  <div className="option-text">
-                    <h3>👨‍⚕️ Doctor Signup</h3>
-                    <p>Create your doctor account</p>
-                  </div>
-                </Link>
-                <Link
-                  to="/signup?role=pharmacist"
-                  onClick={closeAllMenus}
-                  className="option-card"
-                >
-                  <img src={pharmacistLoginImg} alt="Pharmacist Signup" />
-                  <div className="option-text">
-                    <h3>💊 Pharmacist Signup</h3>
-                    <p>Create your pharmacist account</p>
+                    <h3>📝 Register</h3>
+                    <p>Create a new account</p>
                   </div>
                 </Link>
               </div>
             )}
 
             {/* Footer */}
-            {modalStep !== "main" && (
+            {modalStep === "options" && (
               <div className="modal-footer">
                 <button
                   className="btn-back"
-                  onClick={() => setModalStep("main")}
+                  onClick={() => {
+                    setModalStep("roles");
+                    setSelectedRole(null);
+                  }}
                 >
                   ← Back
                 </button>

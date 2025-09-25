@@ -173,7 +173,7 @@ hr { width: 100%; border: none; border-top: 1px solid var(--border-color); }
 /* Option card */
 .option-card {
   flex: 1;
-  min-width: 240px;
+  min-width: 200px;
   max-width: 280px;
   text-decoration: none;
   border-radius: 12px;
@@ -183,7 +183,7 @@ hr { width: 100%; border: none; border-top: 1px solid var(--border-color); }
   align-items: flex-end;
   justify-content: flex-start;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 220px;
+  height: 200px;
   background: var(--background-color);
 }
 
@@ -273,3 +273,4 @@ hr { width: 100%; border: none; border-top: 1px solid var(--border-color); }
     min-width: 100%;
   }
 }
+

@@ -7,7 +7,7 @@ const initialFormState = { email: "", password: "" };
 export default function Login() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const roleFromURL = params.get("role"); // doctor / pharmacist
+  const roleFromURL = params.get("role"); // doctor / pharmacist / patient
 
   const [role, setRole] = useState(roleFromURL || "doctor");
   const [formData, setFormData] = useState(initialFormState);
@@ -47,6 +47,10 @@ export default function Login() {
       title: "For Pharmacy Experts",
       text: "Manage inventory, process prescriptions, and ensure patient care.",
     },
+    patient: {
+      title: "For Patients",
+      text: "View your health records, book appointments, and consult with doctors safely.",
+    },
   };
 
   return (
@@ -61,7 +65,13 @@ export default function Login() {
         {/* Form */}
         <div className="login-panel">
           <div className="login-header">
-            <h2>{role === "doctor" ? "Doctor Login" : "Pharmacist Login"}</h2>
+            <h2>
+              {role === "doctor"
+                ? "Doctor Login"
+                : role === "pharmacist"
+                ? "Pharmacist Login"
+                : "Patient Login"}
+            </h2>
             <p>Welcome back! Please enter your credentials.</p>
           </div>
 
@@ -75,6 +85,7 @@ export default function Login() {
               >
                 <option value="doctor">Login as Doctor</option>
                 <option value="pharmacist">Login as Pharmacist</option>
+                <option value="patient">Login as Patient</option>
               </select>
             )}
 

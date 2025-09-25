@@ -190,3 +190,15 @@
     }
 }
 
+/* ---------- Patient Theme ---------- */
+.patient-theme {
+  --primary-color: #d97706; /* amber */
+  --primary-dark-color: #b45309;
+  --primary-color-focus: rgba(217, 119, 6, 0.25);
+  --success-text: #b45309;
+  --success-border: #fcd34d;
+  --success-bg: #fef3c7;
+  --error-text: #dc2626;
+  --error-border: #fecaca;
+  --error-bg: #fef2f2;
+}

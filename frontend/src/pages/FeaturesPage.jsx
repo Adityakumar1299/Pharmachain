@@ -37,6 +37,16 @@ function FeaturesPage() {
     { title: "Patient Profile Management", description: "Keep a comprehensive profile for each patient, including allergies and past medications.", icon: "👤" }
   ];
 
+  // New patient features
+  const patientFeatures = [
+    { title: "Personal Medication Tracker", description: "Track all your medications and receive reminders for doses and refills.", icon: "💊" },
+    { title: "Secure Health Records", description: "Access your prescription history and medical records securely anytime, anywhere.", icon: "🗂️" },
+    { title: "Direct Communication with Doctors", description: "Message your healthcare provider directly for questions or prescription requests.", icon: "💬" },
+    { title: "Pharmacy Locator", description: "Find nearby pharmacies and check availability of prescribed medications.", icon: "📍" },
+    { title: "Refill Requests", description: "Send refill requests to your doctor digitally without waiting in queues.", icon: "🔄" },
+    { title: "Treatment Insights", description: "Receive personalized insights and tips to improve adherence and health outcomes.", icon: "📊" }
+  ];
+
   const faqs = [
     { q: "Is my patient data secure on this platform?", a: "Absolutely. We use end-to-end encryption and comply with all relevant healthcare data protection standards to ensure your data is always safe and confidential." },
     { q: "How much does the Pharma Project cost?", a: "We offer various subscription plans tailored to the needs of individual practitioners and large clinics. Please visit our pricing page for more details." },
@@ -68,6 +78,12 @@ function FeaturesPage() {
           >
             For Pharmacists
           </button>
+          <button
+            className={`tab-button ${activeTab === "patients" ? "active" : ""}`}
+            onClick={() => setActiveTab("patients")}
+          >
+            For Patients
+          </button>
         </div>
 
         {activeTab === "doctors" && (
@@ -85,6 +101,18 @@ function FeaturesPage() {
         {activeTab === "pharmacists" && (
           <div className="features-grid">
             {pharmacistFeatures.map((f) => (
+              <div key={f.title} className="feature-item-card">
+                <div className="feature-icon">{f.icon}</div>
+                <h3>{f.title}</h3>
+                <p>{f.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === "patients" && (
+          <div className="features-grid">
+            {patientFeatures.map((f) => (
               <div key={f.title} className="feature-item-card">
                 <div className="feature-icon">{f.icon}</div>
                 <h3>{f.title}</h3>
