@@ -6,6 +6,12 @@ pyJWT
 bcrypt
 passlib
 pydantic[email]
-psycopg2-binary #For PostgreSQL
+psycopg2-binary 
 python-dotenv
 boto
+cryptography
+aiomysql
+python-jose[cryptography]
+sqlalchemy[asyncio]
+pydantic-settings
+python-multipart
