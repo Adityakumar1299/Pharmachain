@@ -17,7 +17,7 @@ import PatientForgotPassword from "./pages/Patient/PatientForgotPassword"; // �
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 
-// ✅ ScrollToTop Component
+// ScrollToTop Component
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -36,7 +36,7 @@ function Layout({ children }) {
   const hideOnForgot = [
     "/doctor-forgot-password",
     "/pharmacist-forgot-password",
-    "/patient-forgot-password" // ✅ added patient route
+    "/patient-forgot-password" // added patient route
   ];
 
   const hideLayout = hideOnForgot.includes(location.pathname);
@@ -73,7 +73,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/doctor-forgot-password" element={<DoctorForgotPassword />} />
             <Route path="/pharmacist-forgot-password" element={<PharmacistForgotPassword />} />
-            <Route path="/patient-forgot-password" element={<PatientForgotPassword />} /> {/* ✅ new route */}
+            <Route path="/patient-forgot-password" element={<PatientForgotPassword />} /> {/*  new route */}
           </Routes>
         </Layout>
       </Router>
