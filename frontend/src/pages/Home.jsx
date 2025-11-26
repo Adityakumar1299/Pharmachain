@@ -40,7 +40,9 @@ const Home = () => {
   }, []);
 
 
-   // Joyride tutorial steps
+  
+
+  //  Joyride tutorial steps
   // const steps = [
   //   { target: ".welcome-card", content: "Welcome to the Pharma Project!" },
   //   { target: ".about-section", content: "Learn what this platform does." },
@@ -49,7 +51,7 @@ const Home = () => {
   //   { target: ".media-section", content: "Photos & videos explaining the process." },
   // ];
 
-   // -------------------------------
+  //  -------------------------------
   // 🚀 Driver.js Auto Tour Here
   // -------------------------------
   // useEffect(() => {
@@ -104,7 +106,7 @@ const Home = () => {
   //   setTimeout(() => driverObj.drive(), 500);
   // }, []);
 
-  
+
   return (
     <div className="home-container">
       {/* Welcome */}
