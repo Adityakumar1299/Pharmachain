@@ -111,7 +111,7 @@ export default function Dashboard() {
                 <td>Medicine Stock Added</td>
                 <td>Pharmacy #44</td>
                 <td><span className="status success">Completed</span></td>
-                <td>25 Nov 2025</td>
+                <td>24 Nov 2025</td>
               </tr>
             </tbody>
           </table>
