@@ -2,7 +2,6 @@ from pydantic import BaseModel, EmailStr
 from datetime import date
 from .user import UserRead
 
-# Schema for data coming IN
 class PharmacistCreate(BaseModel):
     role: str = "pharmacist"
     fullName: str
@@ -11,7 +10,7 @@ class PharmacistCreate(BaseModel):
     phone: str
     dateOfBirth: date
     gender: str
-    licenseNumber: str      # Plain text
+    licenseNumber: str 
     qualification: str
     yearsOfExperience: int
     pharmacyName: str
@@ -20,10 +19,10 @@ class PharmacistCreate(BaseModel):
     city: str
     state: str
     pincode: str
-    gstNumber: str          # Plain text
-    aadharNumber: str       # Plain text
+    gstNumber: str         
+    aadharNumber: str    
 
-# Schema for data going OUT
+
 class PharmacistRead(BaseModel):
     user: UserRead
     qualification: str

@@ -1,8 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
-from .user import UserRead # Import the response model
+from .user import UserRead
 
-# Schema for data coming IN from the React form
 class DoctorCreate(BaseModel):
     role: str = "doctor"
     fullName: str
@@ -11,7 +10,7 @@ class DoctorCreate(BaseModel):
     phone: str
     dateOfBirth: date
     gender: str
-    licenseNumber: str      # We receive plain text
+    licenseNumber: str      
     speciality: str
     yearsOfExperience: int
     qualification: str
@@ -20,12 +19,11 @@ class DoctorCreate(BaseModel):
     city: str
     state: str
     pincode: str
-    aadharNumber: str       # We receive plain text
-    panNumber: str          # We receive plain text
+    aadharNumber: str       
+    panNumber: str          
 
-# Schema for data going OUT to the React app
 class DoctorRead(BaseModel):
-    user: UserRead  # Nested user info (id, email, name, etc.)
+    user: UserRead  
     speciality: str
     qualification: str
     hospitalName: str

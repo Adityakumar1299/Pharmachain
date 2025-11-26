@@ -1,8 +1,8 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
-from app.models.user import UserRole # Import the enum from models
+from app.models.user import UserRole
 
-# Base properties shared by all
+
 class UserBase(BaseModel):
     email: EmailStr
     fullName: str
@@ -10,18 +10,16 @@ class UserBase(BaseModel):
     dateOfBirth: date
     gender: str
 
-# Schema for creating a user (password is required)
 class UserCreate(UserBase):
     password: str
     role: UserRole
 
-# Schema for reading/returning a user (password is excluded)
 class UserRead(UserBase):
     id: int
     role: UserRole
 
     class Config:
-        from_attributes = True # Allows Pydantic to read from ORM models
+        from_attributes = True
 
 
 class UserSimpleRead(BaseModel):

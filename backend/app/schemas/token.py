@@ -6,7 +6,7 @@ class Token(BaseModel):
     This is what we send back to the user after a successful login.
     """
     access_token: str
-    token_type: str = "bearer" # Always 'bearer'
+    token_type: str = "bearer"
 
 class TokenData(BaseModel):
     """

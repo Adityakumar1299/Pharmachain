@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
-# --- Import all our tools and blueprints ---
 from app.config import settings
 from app.db.session import get_db
 from app.security import get_password_hash
@@ -15,7 +14,6 @@ from app.models import doctor as doctor_model
 from app.models import pharmacist as pharmacist_model
 from app.models import patient as patient_model
 from app.models import prescription as prescription_model
-
 from app.schemas import doctor as doctor_schema
 from app.schemas import pharmacist as pharmacist_schema
 from app.schemas import patient as patient_schema
@@ -24,33 +22,19 @@ from app.schemas import token as token_schema
 
 router = APIRouter()
 
-# --- Helper function ---
 async def get_user_by_email(db: AsyncSession, email: str):
     """Check if a user with this email already exists."""
     result = await db.execute(select(user_model.User).filter(user_model.User.email == email))
     return result.scalars().first()
-
-
-
-# --- NEW: Login Route ---
 
 @router.post("/login", response_model=token_schema.Token)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    Logs in a user and returns a JWT access token.
     
-    This uses OAuth2 form data, so the frontend must send
-    'username' (which is our email) and 'password'
-    as application/x-www-form-urlencoded.
-    """
-    
-    # 1. Get the user from the DB by email
     user = await get_user_by_email(db, email=form_data.username)
     
-    # 2. Check if user exists and if password is correct
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,7 +42,6 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # 3. Create the access token
     access_token_expires = timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
@@ -66,25 +49,20 @@ async def login_for_access_token(
         data={
             "sub": user.email,
             "id": user.id,
-            "role": user.role.value # Pass the role as a string
+            "role": user.role.value
         }, 
         expires_delta=access_token_expires
     )
     
-    # 4. Return the token
     return {"access_token": access_token, "token_type": "bearer"}
-# --- API Routes ---
 
 @router.post("/signup/doctor", response_model=doctor_schema.DoctorRead, status_code=status.HTTP_201_CREATED)
 async def signup_doctor(
     doctor_in: doctor_schema.DoctorCreate,
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    Create a new doctor user.
-    All logic is in this one function.
-    """
-    # 1. Check if user exists
+
+    #Check if user exists
     user = await get_user_by_email(db, email=doctor_in.email)
     if user:
         raise HTTPException(
@@ -92,10 +70,8 @@ async def signup_doctor(
             detail="The user with this email already exists in the system.",
         )
     
-    # 2. Hash the password (from app/security.py)
     hashed_password = get_password_hash(doctor_in.password)
     
-    # 3. Create the base User model (from app/models/user.py)
     db_user = user_model.User(
         fullName=doctor_in.fullName,
         email=doctor_in.email,
@@ -106,10 +82,8 @@ async def signup_doctor(
         role=user_model.UserRole.doctor
     )
     db.add(db_user)
-    await db.flush() # Get the new user's ID
-    
-    # 4. Encrypt sensitive data (from app/encryption.py)
-    #    and create the Doctor model (from app/models/doctor.py)
+    await db.flush() 
+
     db_doctor = doctor_model.Doctor(
         user_id=db_user.id,
         speciality=doctor_in.speciality,
@@ -120,21 +94,19 @@ async def signup_doctor(
         city=doctor_in.city,
         state=doctor_in.state,
         pincode=doctor_in.pincode,
-        # --- Encrypt PII ---
+        
         licenseNumber_encrypted=encrypt_data(doctor_in.licenseNumber),
         aadharNumber_encrypted=encrypt_data(doctor_in.aadharNumber),
         panNumber_encrypted=encrypt_data(doctor_in.panNumber)
     )
     db.add(db_doctor)
     
-    # 5. Commit and refresh
     await db.commit()
     await db.refresh(db_doctor)
-    await db.refresh(db_user) # Refresh both
-    
-    # 6. Manually build the response schema (from app/schemas/doctor.py)
+    await db.refresh(db_user) 
+
     return doctor_schema.DoctorRead(
-        user=user_schema.UserRead.from_orm(db_user), # Use the UserRead schema
+        user=user_schema.UserRead.from_orm(db_user), 
         speciality=db_doctor.speciality,
         qualification=db_doctor.qualification,
         hospitalName=db_doctor.hospitalName,
@@ -177,7 +149,6 @@ async def signup_pharmacist(
         city=pharmacist_in.city,
         state=pharmacist_in.state,
         pincode=pharmacist_in.pincode,
-        # --- Encrypt PII ---
         licenseNumber_encrypted=encrypt_data(pharmacist_in.licenseNumber),
         gstNumber_encrypted=encrypt_data(pharmacist_in.gstNumber),
         aadharNumber_encrypted=encrypt_data(pharmacist_in.aadharNumber)
@@ -230,7 +201,6 @@ async def signup_patient(
         state=patient_in.state,
         pincode=patient_in.pincode,
         allergies=patient_in.allergies,
-        # --- Encrypt PII ---
         aadharNumber_encrypted=encrypt_data(patient_in.aadharNumber)
     )
     db.add(db_patient)
