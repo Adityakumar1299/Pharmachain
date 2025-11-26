@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
 const initialFormState = { email: "", password: "" };
 
 export default function Login() {
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ needed for redirect
+
   const params = new URLSearchParams(location.search);
-  const roleFromURL = params.get("role"); // doctor / pharmacist / patient
+  const roleFromURL = params.get("role");
 
   const [role, setRole] = useState(roleFromURL || "doctor");
   const [formData, setFormData] = useState(initialFormState);
@@ -15,7 +17,6 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Reset form when role changes
   useEffect(() => {
     setFormData(initialFormState);
     setMessage("");
@@ -31,38 +32,33 @@ export default function Login() {
     setIsLoading(true);
     setMessage("");
 
-    // Fake API delay
+    // ⏳ Simulating API call
     setTimeout(() => {
       setIsLoading(false);
-      setMessage(`${role} login successful!`);
-    }, 1500);
-  };
+      setMessage(`Login successful! Redirecting...`);
 
-  const sidebarContent = {
-    doctor: {
-      title: "For Medical Professionals",
-      text: "Access patient records, manage prescriptions, and collaborate securely.",
-    },
-    pharmacist: {
-      title: "For Pharmacy Experts",
-      text: "Manage inventory, process prescriptions, and ensure patient care.",
-    },
-    patient: {
-      title: "For Patients",
-      text: "View your health records, book appointments, and consult with doctors safely.",
-    },
+      // 🎯 Redirect to dashboard
+      navigate("/dashboard");   // <<— ONLY THIS LINE NEEDED
+    }, 1200);
   };
 
   return (
     <div className={`login-container role-${role}`}>
       <div className="login-wrapper">
+
         {/* Sidebar */}
         <div className="login-sidebar">
-          <h2>{sidebarContent[role].title}</h2>
-          <p>{sidebarContent[role].text}</p>
+          <h2>
+            {role === "doctor"
+              ? "For Medical Professionals"
+              : role === "pharmacist"
+              ? "For Pharmacy Experts"
+              : "For Patients"}
+          </h2>
+          <p>Secure access to your healthcare portal.</p>
         </div>
 
-        {/* Form */}
+        {/* Login Panel */}
         <div className="login-panel">
           <div className="login-header">
             <h2>
@@ -72,11 +68,10 @@ export default function Login() {
                 ? "Pharmacist Login"
                 : "Patient Login"}
             </h2>
-            <p>Welcome back! Please enter your credentials.</p>
+            <p>Please enter your credentials.</p>
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
-            {/* Show dropdown only if user didn’t come from modal */}
             {!roleFromURL && (
               <select
                 className="login-select"
@@ -89,7 +84,6 @@ export default function Login() {
               </select>
             )}
 
-            {/* Email */}
             <div className="login-group">
               <span className="login-icon">📧</span>
               <input
@@ -103,7 +97,6 @@ export default function Login() {
               />
             </div>
 
-            {/* Password */}
             <div className="login-group">
               <span className="login-icon">🔒</span>
               <input
@@ -115,60 +108,22 @@ export default function Login() {
                 onChange={handleChange}
                 required
               />
+
               <span
                 className="login-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? (
-                  // Eye-off icon
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 
-                      0-11-8-11-8a18.45 18.45 0 0 1 
-                      5.06-5.94M9.9 4.24A9.12 9.12 0 
-                      0 1 12 4c7 0 11 8 11 8a18.5 
-                      18.5 0 0 1-2.16 3.19m-6.72-1.07a3 
-                      3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
-                ) : (
-                  // Eye icon
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 
-                      8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                )}
+                {showPassword ? "🙈" : "👁️"}
               </span>
             </div>
 
-            {/* Submit Button */}
             <button type="submit" className="login-btn2" disabled={isLoading}>
               {isLoading ? "Logging In..." : "Login"}
             </button>
           </form>
 
-          {/* Success/Error Messages */}
           {message && <p className="login-message">{message}</p>}
 
-          {/* Links */}
           <div className="login-links">
             <a href={`/${role}-forgot-password`}>Forgot Password?</a>
             <span className="login-separator">·</span>
